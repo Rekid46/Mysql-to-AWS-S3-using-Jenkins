@@ -1,0 +1,31 @@
+version: '3'
+services:
+    jenkins:
+        container_name: jenkins
+        image: jenkins/jenkins
+        ports:
+            - "8080:8080"
+        volumes:
+            - "./jenkins_home:/var/jenkins_home"
+        networks:
+            - net
+    remote_host:
+        container_name: remote_host
+        image: remote_host
+        build:
+            context: centos
+        volumes:
+            - "./aws_s3.sh:/tmp/script.sh"
+        networks:
+            - net
+    db_host:
+        container_name: db
+        image: mysql:5.7
+        environment:
+            - "MYSQL_ROOT_PASSWORD=1234"
+        volumes:
+            - "./db_data:/var/lib/mysql"
+        networks:
+            - net
+networks:
+    net:
